@@ -1,0 +1,20 @@
+{# Template for home page of user #}
+{% extends "home_base.html" %}
+
+{% spaceless %}
+
+
+{% block entries%}
+{% if user.is_authenticated %}
+<div class="solform">
+	<form action="." method="post" enctype="multipart/form-data">
+	  <table>
+		{{ form }}
+	  </table>
+	  <input type="submit" value="Update" />
+	</form>
+</div>	
+{% endif %}
+{% endblock entries%}
+
+{% endspaceless %}
