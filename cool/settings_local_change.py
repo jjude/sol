@@ -16,6 +16,11 @@ DATABASE_PORT = ''
 
 SECRET_KEY = 'secret'
 
+##settings for admin media & sol media; change this accordingly
+MEDIA_ROOT = 'c:/django_projects/cool'
+MEDIA_URL = '/media/'
+ADMIN_MEDIA_PREFIX = '/adminmedia/'
+
 ### ACTIVE DIRECTORY SETTINGS ###
 
 #for example look at: http://grotan.com/ldap/python-ldap-samples.html
