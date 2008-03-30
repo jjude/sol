@@ -41,12 +41,13 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '  %s' % PROJECT_DIR
+#as of now it is of no use
+MEDIA_ROOT = '%s' % PROJECT_DIR
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '%s/files/' % PROJECT_DIR
+MEDIA_URL = 'files/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -103,6 +104,9 @@ LOGOUT_URL = "/"
 
 #profile photo image width & ht
 AVATAR_SIZE = (50,50)
+
+#default avatar iamge
+DEFAULT_AVATAR = 'sol_avatar.jpg'
 
 #got another settings that stores uid/secret random number etc.
 if not DEBUG:

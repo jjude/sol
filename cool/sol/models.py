@@ -12,7 +12,7 @@ class userprofile(models.Model):
 	user = models.ForeignKey(auth.User, unique=True)
 	#here goes the profile details
 	nickname = models.CharField(max_length=30)
-	#profphoto = models.ImageField("Your Avatar", upload_to=settings.MEDIA_URL, blank=True,null=True)
+	profphoto = models.ImageField("Your Avatar", upload_to=settings.MEDIA_URL, blank=True,null=True)
 	#blog_url = models.URLField(blank=True,null=True)
 		
 	def __unicode__(self):
@@ -26,30 +26,28 @@ class userprofile(models.Model):
 		if os.path.exists(img_name):
 			os.remove(img_name)
 		(name,ext) = os.path.splitext(filename)
-		filename = "%s%s" % (self.user,ext)		
+		filename = "%s%s" % (self.user,ext)
 		
 		super(userprofile, self)._save_FIELD_file(field, filename, raw_contents, save)
 
-	#def save(self):	
-		#if os.path.exists():
-		#	os.remove(get_profphoto_filename())
+	def save(self):	
 		#resize the image that is uploaded; use PIL for that
 		#refer: http://superjared.com/static/code/photo_model.py
-		
-		#from PIL import Image
-		#img_to_save = Image.open(self.get_profphoto_filename())
+
+		from PIL import Image
+		img_to_save = Image.open(self.get_profphoto_filename())
 
 		# We use our PIL Image object to create the thumbnail, which already
 		# has a thumbnail() convenience method that contrains proportions.
 		# Additionally, we use Image.ANTIALIAS to make the image look better.
 		# Without antialiasing the image pattern artifacts may result.
-		
-		#img_to_save.thumbnail(settings.AVATAR_SIZE, Image.ANTIALIAS)
-		
+
+		img_to_save.thumbnail(settings.AVATAR_SIZE, Image.ANTIALIAS)
+
 		#save it
-		#img_to_save.save(self.get_profphoto_filename())
-		
-		#super(userprofile,self).save()
+		img_to_save.save(self.get_profphoto_filename())
+
+		super(userprofile,self).save()
 	
 	class Admin:
 		list_display = ('user','nickname')
@@ -89,7 +87,12 @@ class sol(models.Model):
 		return userprofile.objects.get(user=self.author).nickname
 	
 	def get_author_avatar_url(self):
-		return userprofile.objects.get(user=self.author).get_profphoto_url()
+		(path,filename) =  os.path.split(userprofile.objects.get(user=self.author).get_profphoto_filename())
+		if len(filename) == 0:
+			filename = settings.DEFAULT_AVATAR
+		#you need to prepend with /; otherwise the base for the image path will be whichever path we are in
+		#like in /u/100 - it will be taken as /u/100/files/avatar.jpg
+		return '/%s%s' % (settings.MEDIA_URL, filename)
 				
 	class Admin:
 		list_display = ('author', 'body', 'date')
