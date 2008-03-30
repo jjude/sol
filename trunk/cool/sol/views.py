@@ -147,6 +147,7 @@ def user_profile(request,form_class=None):
 		form_class = get_profile_form()
 
 	if request.method == 'POST':
+		print request.FILES
 		form = form_class(data=request.POST, files=request.FILES, instance=profile_obj)
 		if form.is_valid():
 			form.save()

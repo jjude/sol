@@ -213,6 +213,9 @@ input[type="submit"] { /* class selector */
 	width:25%;
 }
 
+.soltable img{
+	border: none;
+}
 /* .............................. */
 /* Footer */
 /* .............................. */

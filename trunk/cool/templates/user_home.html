@@ -10,7 +10,10 @@
     {% for sol in query_list %}
 	<tr class="solrow">
 		<td class="solauthor">
-		<a href="{{ sol.get_author_url }}"> {{ sol.get_author_nickname }} </a>		
+                <a href="{{ sol.get_author_url }}">
+                        <img src="{{sol.get_author_avatar_url}}" alt="{{sol.get_author_nickname}}"/>
+                </a>
+		<a href="{{sol.get_author_url}}"> {{sol.get_author_nickname}} </a>		
 		</td>
 		<td class="solentry">{{ sol.body }} 
 		</td>
