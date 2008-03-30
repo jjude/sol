@@ -27,7 +27,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Calcutta'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -41,17 +41,17 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '%s/uploads' % PROJECT_DIR
+MEDIA_ROOT = '  %s' % PROJECT_DIR
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/profphotos'
+MEDIA_URL = '%s/files/' % PROJECT_DIR
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '%s/media/' % PROJECT_DIR
+ADMIN_MEDIA_PREFIX = '/adminmedia/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'secret'
@@ -91,5 +91,19 @@ INSTALLED_APPS = (
 #user profile module
 AUTH_PROFILE_MODULE = "sol.userprofile"
 
+# URL for SITE_MEDIA - included by joseph
+SITE_MEDIA = '%s' % PROJECT_DIR
+
+# paginate by
+PAGINATE_BY = 100
+
+#by default Django logouts to accounts/profile;
+#if this is not defined accounts/profile to be captured in urls.py
+LOGOUT_URL = "/"
+
+#profile photo image width & ht
+AVATAR_SIZE = (50,50)
+
 #got another settings that stores uid/secret random number etc.
-from settings_local import *
+if not DEBUG:
+    from settings_prod import *
