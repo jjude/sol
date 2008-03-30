@@ -1,19 +1,7 @@
-{# Template for home page for sol; it lists all the sols #}
+{# Template for home page of user #}
 {% extends "home_base.html" %}
 
 {% spaceless %}
-
-{% block extramenu %}
-<li>
-
-{% if user.is_authenticated %}
-	<a href="/logout" title="log off">Logoff</a>
-	<a href="/profile" title="user profile">Profile</a>
-{% else %}
-	<a href="/login" title="login">Login</a>
-{% endif %}
-</li>
-{% endblock %}
 
 
 {% block newsol %}
@@ -21,26 +9,24 @@
 <div class="form">
 	<form action="/createsol/" method="post" enctype="multipart/form-data">
 	  <table>
-		{{ solForm }}
+		{{ solForm }}		
 	  </table>
-	  <input type="submit" value="Update" />
+	  <input type="submit" value="Create" />
 	</form>
 </div>	
 {% endif %}
 {% endblock newsol%}
 
 {% block entries%}
-<h2 id="latestentries">Latest Sols</h2>
+<h2 id="latestentries">Sols in Group - {{ grpName }}: </h2>
 <table class="soltable"><tbody>
     {% for sol in query_list %}
 	<tr class="solrow">
 		<td class="solauthor">
 		<a href="{{ sol.get_author_url }}"> {{ sol.get_author_nickname }} </a>		
 		</td>
-		<td class="solentry">{{ sol.body }}
-		</td>
-                <td class="solgroup"> <a href="{{ sol.group.get_absolute_url }}"> {{ sol.group.desc }} </a>
-                </td>
+		<td class="solentry">{{ sol.body }} 
+		</td>	
 	</tr>
     {% endfor %}
 </tbody></table>	
@@ -49,12 +35,11 @@
 {% block paginate %}
 <div class="paginate">
 {% if has_previous %} 
-	<a href='/p/{{ previous_page }}'>Previous</a>  
+	<a href='/u/{{u_id}}/p/{{ previous_page }}'>Previous</a>  
 	{% if has_next %} | {% endif %} 
 {% endif %} 
 
-{% if has_next %} <a href='/p/{{ next_page }}/'>Next</a>  {% endif %}
+{% if has_next %} <a href='/u/{{ u_id }}/p/{{ next_page }}/'>Next</a>  {% endif %}
 </div>
 {% endblock paginate %}
-
 {% endspaceless %}

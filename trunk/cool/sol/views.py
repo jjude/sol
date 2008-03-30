@@ -5,12 +5,10 @@ from django.http import HttpResponseRedirect
 import datetime
 
 #sol models
-from cool.sol.models import userprofile, sol, solForm
-
+from cool.sol.models import userprofile, sol, solForm, group, grpForm
 
 #for pagination
 from django.core.paginator import ObjectPaginator, InvalidPage
-
 
 #for user profile
 from django.contrib.auth.models import SiteProfileNotAvailable
@@ -19,55 +17,63 @@ from django.conf import settings
 from django import newforms as forms
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-
-from cool.sol.models import solForm
 from django.contrib.auth.models import User
 
 #for pagination: http://www.slideshare.net/simon/the-django-web-application-framework/#
 #for user profile check django-profile in code.google.com
 
-#page_num = initially it is 0; otherwise the pagenumber to be displayed
-def home(request, page_num=0):
-	paginate_by = 100
+#generic view function for homepage (solhome), userhome and group home
+#object is one of the param; object="u" -> user; g->group; s->sol, which is default home page
+#object id : for u & g the respective ids; for sol nothing; defaults to sol(0)
+#pagenum : for pagination; default is 0 otherwise the pagenumber to be displayed in the input
+
+def home(request, model="s",objectId="0",page_num=0, template='home.html'):
+	paginate_by = settings.PAGINATE_BY
+	#what we get as parameter is always a string
 	page_num = int(page_num)
-	sol_list = ObjectPaginator(sol.objects.all(), paginate_by)
-	has_previous = sol_list.has_previous_page(page_num)
-	has_next = sol_list.has_next_page(page_num)
+	if model == 'u': #for user we need to filter for the user
+		info_list = ObjectPaginator(sol.objects.all().filter(author__username=objectId),paginate_by)	
+	elif model== 's': #for sol; home page
+		info_list = ObjectPaginator(sol.objects.all(),paginate_by)
+	elif model =='g': #for group
+		if objectId == '0':
+			info_list = ObjectPaginator(group.objects.all(),paginate_by)
+		else:
+			info_list = ObjectPaginator(sol.objects.all().filter(group=group.objects.get(id=objectId)),paginate_by)
+		
+	has_previous = info_list.has_previous_page(page_num)
+	has_next = info_list.has_next_page(page_num)
 	
-	form = solForm()
-	
-	sol_info_dict = {
-		'sol_list' : sol_list.get_page(page_num),
+	info_dict = {
+		'query_list' : info_list.get_page(page_num),
 		'has_previous' : has_previous,
 		'previous_page' : page_num - 1,
 		'has_next' : has_next,
 		'next_page' : page_num + 1,
 		'site_name' : 'sol',
-		#need to set user in the context
 		'user' : request.user,
-		'solForm': form
-		}
-	return render_to_response('home.html',sol_info_dict)
-
-#page_num = initially it is 0; otherwise the pagenumber to be displayed
-def user_home(request,u_id, page_num=0):
-	paginate_by = 100
-	page_num = int(page_num)
-	sol_list = ObjectPaginator(sol.objects.all().filter(author__username=u_id), paginate_by)
-	has_previous = sol_list.has_previous_page(page_num)
-	has_next = sol_list.has_next_page(page_num)
+	}
 	
-	user_info_dict = {
-		'sol_list' : sol_list.get_page(page_num),
-		'has_previous' : has_previous,
-		'previous_page' : page_num - 1,
-		'has_next' : has_next,
-		'next_page' : page_num + 1,
-		'u_id' : u_id,
-		'nickname' : userprofile.objects.get(user__username=u_id).nickname,
-		'site_name' : 'sol'
-		}
-	return render_to_response('user_home.html',user_info_dict)
+	if model == 's':
+		form = solForm()
+		#this is how you append to a dict
+		info_dict['solForm'] = form
+	
+	if model == 'u':
+		#this is how you append to a dict
+		info_dict['u_id'] = objectId
+		info_dict['nickname'] = userprofile.objects.get(user__username=objectId).nickname		
+	
+	if model == 'g':
+		info_dict['grpForm'] = grpForm()
+		if objectId == '0':
+			info_dict['solForm'] = solForm()
+		else:
+			info_dict['solForm'] = solForm(initial={'group': group.objects.get(id=objectId)})
+			info_dict['grpName'] = group.objects.get(id=objectId).desc
+		
+	return render_to_response(template, info_dict)
+	
 		
 def logout(request):
 		auth.logout(request)
@@ -82,8 +88,19 @@ def createsol(request):
 	newsol.author = request.user
 	newsol.date = datetime.datetime.today()
 	newsol.body = request.POST['body']
+	if request.POST['group'] <> '':
+		newsol.group = group.objects.get(id=request.POST['group'])
 	newsol.save()
 	return HttpResponseRedirect('/')
+
+def creategroup(request):
+	if request.POST['desc'] == "":
+		return HttpResponseRedirect('/groups/')
+		
+	newgrp = group()
+	newgrp.desc = request.POST['desc']
+	newgrp.save()
+	return HttpResponseRedirect('/groups/')
 
 def get_profile_model():
     """
@@ -112,11 +129,11 @@ def get_profile_form():
     
     """
     profile_mod = get_profile_model()
-    class _ProfileForm(forms.ModelForm):
+    class ProfileForm(forms.ModelForm):
         class Meta:
             model = profile_mod
             exclude = ('user',)
-    return _ProfileForm
+    return ProfileForm
 
 @login_required
 def user_profile(request,form_class=None):
