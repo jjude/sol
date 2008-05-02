@@ -23,9 +23,9 @@
 	  <table>
 		{{ solForm }}
 	  </table>
-	  <input type="submit" value="Update" />
+	  <input type="submit" value="Create" />
 	</form>
-</div>	
+</div>
 {% endif %}
 {% endblock newsol%}
 
@@ -38,23 +38,28 @@
                 <a href="{{ sol.get_author_url }}">
                         <img src="{{ sol.get_author_avatar_url }}" alt="{{ sol.get_author_nickname }}"/>
                 </a>
-		<a href="{{ sol.get_author_url }}"> {{ sol.get_author_nickname }} </a>		
+		<a href="{{ sol.get_author_url }}"> {{ sol.get_author_nickname }} </a>
 		</td>
-		<td class="solentry">{{ sol.body }}
+		<td class="solentry">{{ sol.body }} <br/>
+		about {{ sol.date|timesince}} ago
+
+		{% if sol.group.desc %}
+		in <a href="{{ sol.group.get_absolute_url }}"> {{ sol.group.desc }}
+		{% endif %}
+
 		</td>
-                <td class="solgroup"> <a href="{{ sol.group.get_absolute_url }}"> {{ sol.group.desc }} </a>
-                </td>
+
 	</tr>
     {% endfor %}
-</tbody></table>	
+</tbody></table>
 {% endblock entries%}
 
 {% block paginate %}
 <div class="paginate">
-{% if has_previous %} 
-	<a href='/p/{{ previous_page }}'>Previous</a>  
-	{% if has_next %} | {% endif %} 
-{% endif %} 
+{% if has_previous %}
+	<a href='/p/{{ previous_page }}'>Previous</a>
+	{% if has_next %} | {% endif %}
+{% endif %}
 
 {% if has_next %} <a href='/p/{{ next_page }}/'>Next</a>  {% endif %}
 </div>
