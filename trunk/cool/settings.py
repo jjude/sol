@@ -1,9 +1,10 @@
 # Django settings for cool project.
 #for spliting settings.py look at: http://code.djangoproject.com/wiki/SplitSettings
 import os
+import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = BASE_DIR
+PROJECT_DIR = sys.argv[0]
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -16,7 +17,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = os.path.join(PROJECT_DIR, 'sol.db')             # Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(".", 'sol.db')             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -41,8 +42,9 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-#as of now it is of no use
-MEDIA_ROOT = '%s' % PROJECT_DIR
+
+#MEDIA_ROOT = '%s' % PROJECT_DIR
+MEDIA_ROOT = '.'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -71,29 +73,31 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
 )
 
-ROOT_URLCONF = 'cool.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    r'%s/templates' % PROJECT_DIR,
+    #r'%s/templates/sol' % PROJECT_DIR,
+    r'templates/sol',
+    r'templates'
 )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-#    'django.contrib.sites',	
+#    'django.contrib.sites',
     'django.contrib.admin',
-    'cool.sol',
+    'sol',
 )
 
 #user profile module
 AUTH_PROFILE_MODULE = "sol.userprofile"
 
 # URL for SITE_MEDIA - included by joseph
-SITE_MEDIA = '%s' % PROJECT_DIR
+SITE_MEDIA = '.'
 
 # paginate by
 PAGINATE_BY = 100

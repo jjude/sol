@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 import datetime
 
 #sol models
-from cool.sol.models import userprofile, sol, solForm, group, grpForm
+from sol.models import userprofile, sol, solForm, group, grpForm
 
 #for pagination
 from django.core.paginator import ObjectPaginator, InvalidPage
@@ -32,7 +32,7 @@ def home(request, model="s",objectId="0",page_num=0, template='home.html'):
 	#what we get as parameter is always a string
 	page_num = int(page_num)
 	if model == 'u': #for user we need to filter for the user
-		info_list = ObjectPaginator(sol.objects.all().filter(author__username=objectId),paginate_by)	
+		info_list = ObjectPaginator(sol.objects.all().filter(author__username=objectId),paginate_by)
 	elif model== 's': #for sol; home page
 		info_list = ObjectPaginator(sol.objects.all(),paginate_by)
 	elif model =='g': #for group
@@ -40,10 +40,19 @@ def home(request, model="s",objectId="0",page_num=0, template='home.html'):
 			info_list = ObjectPaginator(group.objects.all(),paginate_by)
 		else:
 			info_list = ObjectPaginator(sol.objects.all().filter(group=group.objects.get(id=objectId)),paginate_by)
-		
+
+	#if the user altered the URL for a particular page that doesn't exist
+	try:
+		page_info = info_list.get_page(page_num)
+	except InvalidPage:
+		page_num = 0
+		page_info = info_list.get_page(page_num)
+
 	has_previous = info_list.has_previous_page(page_num)
 	has_next = info_list.has_next_page(page_num)
-	
+
+
+
 	info_dict = {
 		'query_list' : info_list.get_page(page_num),
 		'has_previous' : has_previous,
@@ -53,17 +62,17 @@ def home(request, model="s",objectId="0",page_num=0, template='home.html'):
 		'site_name' : 'sol',
 		'user' : request.user,
 	}
-	
+
 	if model == 's':
 		form = solForm()
 		#this is how you append to a dict
 		info_dict['solForm'] = form
-	
+
 	if model == 'u':
 		#this is how you append to a dict
 		info_dict['u_id'] = objectId
-		info_dict['nickname'] = userprofile.objects.get(user__username=objectId).nickname		
-	
+		info_dict['nickname'] = userprofile.objects.get(user__username=objectId).nickname
+
 	if model == 'g':
 		info_dict['grpForm'] = grpForm()
 		if objectId == '0':
@@ -71,19 +80,21 @@ def home(request, model="s",objectId="0",page_num=0, template='home.html'):
 		else:
 			info_dict['solForm'] = solForm(initial={'group': group.objects.get(id=objectId)})
 			info_dict['grpName'] = group.objects.get(id=objectId).desc
-		
+
 	return render_to_response(template, info_dict)
-	
-		
+
+
 def logout(request):
 		auth.logout(request)
 		return HttpResponseRedirect('/')
-		
+
+@login_required
 def createsol(request):
 	#newsol = sol(request.POST['body'], request.user,datetime.datetime.today())
+	#if there is nothing in the text field, do nothing
 	if request.POST['body'] == "":
 		return HttpResponseRedirect('/')
-	
+
 	newsol = sol()
 	newsol.author = request.user
 	newsol.date = datetime.datetime.today()
@@ -93,10 +104,11 @@ def createsol(request):
 	newsol.save()
 	return HttpResponseRedirect('/')
 
+@login_required
 def creategroup(request):
 	if request.POST['desc'] == "":
 		return HttpResponseRedirect('/groups/')
-		
+
 	newgrp = group()
 	newgrp.desc = request.POST['desc']
 	newgrp.save()
@@ -108,7 +120,7 @@ def get_profile_model():
     model, as defined by the ``AUTH_PROFILE_MODULE`` setting. If that
     setting is missing, raises
     ``django.contrib.auth.models.SiteProfileNotAvailable``.
-    
+
     """
     if (not hasattr(settings, 'AUTH_PROFILE_MODULE')) or \
            (not settings.AUTH_PROFILE_MODULE):
@@ -126,7 +138,7 @@ def get_profile_form():
     profile model, as defined by the ``AUTH_PROFILE_MODULE``
     setting. If that setting is missing, raises
     ``django.contrib.auth.models.SiteProfileNotAvailable``.
-    
+
     """
     profile_mod = get_profile_model()
     class ProfileForm(forms.ModelForm):
@@ -141,13 +153,12 @@ def user_profile(request,form_class=None):
 		profile_obj = request.user.get_profile()
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect("/")
-	
+
 	#if called via template UI, form_class = none
 	if form_class is None:
 		form_class = get_profile_form()
 
 	if request.method == 'POST':
-		print request.FILES
 		form = form_class(data=request.POST, files=request.FILES, instance=profile_obj)
 		if form.is_valid():
 			form.save()
@@ -155,9 +166,9 @@ def user_profile(request,form_class=None):
 	#when called from user_profile it will have the instance
 	else:
 		form = form_class(instance=profile_obj)
-	
-	
+
+
 	return render_to_response('user_profile.html',{'form': form,'profile': profile_obj, 'user': request.user})
-		
+
 def help(request):
 	return render_to_response('help.html')

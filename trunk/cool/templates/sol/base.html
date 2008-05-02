@@ -23,8 +23,8 @@
             </div>
             <div id="menu">
 			    <ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="/help">Help</a></li>
+					<li><a href="/" title="Home">Home</a></li>
+					<li><a href="/help" title="Help">Help</a></li>
                                         <li><a href="/groups">Groups</a></li>
 					{% block extramenu %}
 					{% endblock %}
@@ -34,7 +34,7 @@
                 <div id="left">
                     {% block content %}{{ content }}{% endblock %}
                 </div>
-                <div id="right">                
+                <div id="right">
                     {% block sidebar %}{% endblock %}
                 </div>
                 <div id="footer">
@@ -43,6 +43,6 @@
             </div>
         </div>
     </body>
-    
-</html>        
+
+</html>
 {% endspaceless %}
