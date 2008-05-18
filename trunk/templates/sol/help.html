@@ -1,0 +1,37 @@
+{# Template for home page of user #}
+{% extends "base.html" %}
+
+{% spaceless %}
+
+{% block content%}
+<ol>
+    <li>What is SOL?
+        <p>SOL is an open-source micro-blog developed inhouse at iGATE.</p>
+    </li>
+    <li>What are groups?
+        <p>Think of it as conversation threads.</p>
+    </li>
+    <li>How can I add a new SOL for a particular group?
+        <p>Select that particular group and add a SOL in its homepage.</p>
+    </li>
+    <li>How to list all SOLs for a particular group?
+        <p>When you click on the link for that particular group, it will list all the SOLs of that group.</p>
+    </li>
+    <li>Ho to list all SOLs for a particular user?
+        <p>Click on the link for the user - nickname - or the 'avatar'.</p>
+    </li>
+    <li>What is an 'avatar'?
+        <p>An icon representing you! It can be a photo or any image. The image will be resized to 50,50.</p>
+    </li>
+    <li>How to change my 'avatar'?
+        <p>Once you've logged in, you will find a 'Profile' link on the top right. Click on it and upload your 'avatar'.</p>
+    </li>
+    <li>How to change my 'nickname'?
+        <p>As with the 'avatar', you can change the nickname, within 'Profile' link.</p>
+    </li>
+    <li>How to use SOL?
+        <p>There are many ways. But we are leaving this to your imagination!</p>
+    </li>
+</ol>
+{% endblock content%}
+{% endspaceless %}

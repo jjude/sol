@@ -1,0 +1,33 @@
+{# Template for home page of user #}
+{% extends "base.html" %}
+
+{% spaceless %}
+
+{% block seo %}
+    <title>{{ site_name }} {% block title %}{% endblock %}</title>
+    <meta name="keywords" content="sol, social network, chat, communicate" />
+    <meta name="description" content="Sol is a social networking app" />
+{% endblock seo%}
+
+{% block site_info %}
+    <h1><a href="/">{{ site_name }}</a></h1>
+{% endblock site_info%}
+
+
+
+{% block content%}
+{% block newgroup %} {% endblock %} 
+{% block newsol %} {% endblock %} 
+{% block entries%} {% endblock %}
+{% block paginate %} {% endblock %}
+{% endblock content%}
+	
+
+{% block footer %}
+<ul>
+	<li><a href="/">Home</a></li>	
+	<li><a href="/help">Help</a></li>
+</ul>
+{% endblock footer %}
+
+{% endspaceless %}
