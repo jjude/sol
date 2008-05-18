@@ -15,7 +15,7 @@ from cool.sol.models import userprofile
 ##############################################
 class SOLTests(TestCase):
     def setUp(self):
-        #test definitions
+        #test data setup applicable for all test cases
         #create a logger
         logging.basicConfig(level=logging.DEBUG,
             format='%(asctime)s %(levelname)-8s %(message)s',
@@ -194,13 +194,13 @@ class SOLTests(TestCase):
         self.assertEquals(response.context[1]['has_next'],True)
 
         #lets navigate to next page
-        response=self.client.get('/groups/p/1/')
+        response=self.client.get('/groups/p/2/')
         self.assertEquals(response.context[1]['has_next'],False)
         self.assertEquals(response.context[1]['has_previous'],True)
 
         #try to access an non-existing page
         #this is already handled in views; will be redirected to page_num=0
-        response=self.client.get('/groups/p/2/')
+        response=self.client.get('/groups/p/3/')
         self.assertEquals(response.context[1]['has_next'],True)
         self.assertEquals(response.context[1]['has_previous'],False)
 
@@ -235,12 +235,12 @@ class SOLTests(TestCase):
         self.assertEquals(response.context[1]['has_next'],True)
 
         #lets navigate to next page
-        response=self.client.get('/p/1/')
+        response=self.client.get('/p/2/')
         self.assertEquals(response.context[1]['has_next'],True)
         self.assertEquals(response.context[1]['has_previous'],True)
 
         #try to access an non-existing page
         #this is already handled in views; will be redirected to page_num=0
-        response=self.client.get('/p/5/')
+        response=self.client.get('/p/6/')
         self.assertEquals(response.context[1]['has_next'],True)
         self.assertEquals(response.context[1]['has_previous'],False)

@@ -8,7 +8,8 @@ import datetime
 from sol.models import userprofile, sol, solForm, group, grpForm
 
 #for pagination
-from django.core.paginator import ObjectPaginator, InvalidPage
+from django.core.paginator import QuerySetPaginator as Paginator
+from django.core.paginator import InvalidPage
 
 #for user profile
 from django.contrib.auth.models import SiteProfileNotAvailable
@@ -27,38 +28,38 @@ from django.contrib.auth.models import User
 #object id : for u & g the respective ids; for sol nothing; defaults to sol(0)
 #pagenum : for pagination; default is 0 otherwise the pagenumber to be displayed in the input
 
-def home(request, model="s",objectId="0",page_num=0, template='home.html'):
+def home(request, model="s", objectId="0", page_num=1, template='home.html'):
 	paginate_by = settings.PAGINATE_BY
 	#what we get as parameter is always a string
 	page_num = int(page_num)
 	if model == 'u': #for user we need to filter for the user
-		info_list = ObjectPaginator(sol.objects.all().filter(author__username=objectId),paginate_by)
+		info_list = Paginator(sol.objects.all().filter(author__username=objectId), paginate_by)
 	elif model== 's': #for sol; home page
-		info_list = ObjectPaginator(sol.objects.all(),paginate_by)
+		info_list = Paginator(sol.objects.all(), paginate_by)
 	elif model =='g': #for group
 		if objectId == '0':
-			info_list = ObjectPaginator(group.objects.all(),paginate_by)
+			info_list = Paginator(group.objects.all(), paginate_by)
 		else:
-			info_list = ObjectPaginator(sol.objects.all().filter(group=group.objects.get(id=objectId)),paginate_by)
+			info_list = Paginator(sol.objects.all().filter(group=group.objects.get(id=objectId)), paginate_by)
 
-	#if the user altered the URL for a particular page that doesn't exist
+    #if the user altered the URL for a particular page that doesn't exist
 	try:
-		page_info = info_list.get_page(page_num)
+		page_info = info_list.page(page_num)
 	except InvalidPage:
-		page_num = 0
-		page_info = info_list.get_page(page_num)
+		page_num = 1
+		page_info = info_list.page(page_num)
 
-	has_previous = info_list.has_previous_page(page_num)
-	has_next = info_list.has_next_page(page_num)
+	has_previous = page_info.has_previous()
+	has_next = page_info.has_next()
 
 
 
 	info_dict = {
-		'query_list' : info_list.get_page(page_num),
-		'has_previous' : has_previous,
-		'previous_page' : page_num - 1,
-		'has_next' : has_next,
-		'next_page' : page_num + 1,
+		'query_list' : page_info.object_list,
+		'has_previous' : page_info.has_previous(),
+		'previous_page' : page_info.previous_page_number(),
+		'has_next' : page_info.has_next(),
+		'next_page' : page_info.next_page_number(),
 		'site_name' : 'sol',
 		'user' : request.user,
 	}

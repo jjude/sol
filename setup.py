@@ -21,7 +21,7 @@ setup(
     #these are the data files like templates, site media and admin media
     data_files = [(".",["soldemo.db"]),
         ("templates\\sol",glob.glob("templates\\sol\\*.*")),
-        ("files",glob.glob("files\\*.*")),
+        ("files",glob.glob("files\\sol_avatar.jpg")),
         ("site_media",glob.glob("site_media\\*.*")),
         ("site_media\\css",glob.glob("site_media\\css\\*.*")),
         ("templates\\admin",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\templates\\admin\\*.*")),

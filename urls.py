@@ -44,7 +44,7 @@ urlpatterns = patterns('sol.views',
      #create a sol; called by form action
      (r'^createsol/$', 'createsol'),
 
-     #create a sol; called by form action
+     #create a group; called by form action
      (r'^creategroup/$', 'creategroup'),
 
 
