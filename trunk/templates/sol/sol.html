@@ -1,0 +1,40 @@
+{# Template for home page for sol; it lists all the sols #}
+{% extends "base.html" %}
+
+{% spaceless %}
+
+{% block seo %}
+    <title>{{ site_name }} {% block title %}{% endblock %}</title>
+    <meta name="keywords" content="sol, social network, chat, communicate" />
+    <meta name="description" content="Sol is a social networking app" />
+{% endblock seo%}
+
+{% block feeds %}
+
+{% endblock %}
+
+{% block content%}
+<table class="soltable"><tbody>
+    {% for sol in query_list %}
+	<tr class="solrow">
+		<td class="solauthor">
+                <a href="{{ sol.get_author_url }}">
+                        <img src="{{ sol.get_author_avatar_url }}" alt="{{ sol.get_author_nickname }}"/>
+                </a>
+		<a href="{{ sol.get_author_url }}"> {{ sol.get_author_nickname }} </a>
+		</td>
+		<td class="solentry">{{ sol.body }} <br/>
+		about {{ sol.date|timesince}} ago
+
+		{% if sol.group.desc %}
+		in <a href="{{ sol.group.get_absolute_url }}"> {{ sol.group.desc }}
+		{% endif %}
+
+		</td>
+
+	</tr>
+    {% endfor %}
+</tbody></table>
+{% endblock content%}
+
+{% endspaceless %}

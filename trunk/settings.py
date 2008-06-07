@@ -93,24 +93,19 @@ INSTALLED_APPS = (
     'sol',
 )
 
-#user profile module
-AUTH_PROFILE_MODULE = "sol.userprofile"
 
-# URL for SITE_MEDIA - included by joseph
-SITE_MEDIA = '.'
-
-# paginate by
-PAGINATE_BY = 100
-
+### Application Settings ###
+AUTH_PROFILE_MODULE = "sol.userprofile" #extended user profile module
+SITE_MEDIA = '.'                        # URL for SITE_MEDIA = css/js for SOL
+PAGINATE_BY = 100                       # paginate by
+AVATAR_SIZE = (50,50)                   #profile photo image width & ht
+DEFAULT_AVATAR = 'sol_avatar.jpg'       #default avatar iamge
+SITE_NAME = 'SOL'                       # the name for this service
+FEED_SIZE = 15
 #by default Django logouts to accounts/profile;
 #if this is not defined accounts/profile to be captured in urls.py
 LOGOUT_URL = "/"
-
-#profile photo image width & ht
-AVATAR_SIZE = (50,50)
-
-#default avatar iamge
-DEFAULT_AVATAR = 'sol_avatar.jpg'
+### /Application Settings  ###
 
 #got another settings that stores uid/secret random number etc.
 if not DEBUG:

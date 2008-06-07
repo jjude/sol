@@ -83,18 +83,19 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import AdminMediaHandler
 
 if __name__ == "__main__":
+    import socket
+    #gethostbyaddrs returns a tuple in the form of (hostname, aliaslist,ipaddrlist)
+    ipaddr = socket.gethostbyaddr(socket.gethostname())[2][0]
+    siteaddr = 'http://%s:8000' % ipaddr
+    
     print '*****************************************************'
-    print 'Demoserver is hosted at: http://localhost:8000'
+    print 'Demoserver is hosted at: %s' % siteaddr
     print 'Please wait as it opens in the browser'
     print 'To shutdown the server, press ctrl-c in this window'
     print ''
     print 'local user id is: jjude; password is also jjude'
     print 'admin user id is: admin; password is also admin'
     print '*****************************************************'
-
-    #let us get the hostname of the machine
-#import socket
-#socket.gethostbyaddr(socket.gethostname())
 
     # Set up site-wide config first so we get a log if errors occur.
     cherrypy.config.update({'environment': 'production',
@@ -109,7 +110,7 @@ if __name__ == "__main__":
         cherrypy.server.socket_port = 8000
 
         cherrypy.server.quickstart()
-        cherrypy.engine.start_with_callback(webbrowser.open, ('http://localhost:8000',),)
+        cherrypy.engine.start_with_callback(webbrowser.open, (siteaddr,),)
 
     except KeyboardInterrupt:
         cherrypy.server.stop()

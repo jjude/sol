@@ -3,6 +3,7 @@ urls for Sol
 """
 
 from django.conf.urls.defaults import *
+from sol.feeds import *
 from sol.models import userprofile, sol, solForm
 
 from django.conf import settings
@@ -12,7 +13,7 @@ urlpatterns = patterns('sol.views',
      #homepage for sol with pagination enabled
      #url like: http://sol.com/p/0
      (r'^p/(?P<page_num>\d+)/$', 'home',{'template':'home.html', 'model':'s'}),
-
+     
      #default page number is 0;
      #url like: http://sol.com/
      (r'^$', 'home'),
@@ -21,6 +22,11 @@ urlpatterns = patterns('sol.views',
      #params are passed inline; view is defined in views.py
      #url like: http://sol.com/u/1029/p/0
      (r'^u/(?P<objectId>\d+)/p/(?P<page_num>\d+)/$', 'home',{'template':'user_home.html', 'model':'u'}),
+
+     #url for individual sol
+     #url like: http://sol.com/sol/10
+     (r'^sol/(?P<objectId>\d+)/$', 'home',{'template':'sol.html', 'model':'s'}),
+     
 
     #user homepage - login for contract employees with employee ids as chars;
     #url like: http://sol.com/u/jjude/p/0
@@ -37,7 +43,6 @@ urlpatterns = patterns('sol.views',
      (r'^g/(?P<objectId>\d+)/$', 'home',{'template':'group_home.html', 'model':'g'}),
      (r'^g/(?P<objectId>\d+)/p/(?P<page_num>\d+)/$', 'home',{'template':'group_home.html', 'model':'g'}),
 
-
      #logoff
      (r'^logout/$', 'logout'),
 
@@ -47,7 +52,6 @@ urlpatterns = patterns('sol.views',
      #create a group; called by form action
      (r'^creategroup/$', 'creategroup'),
 
-
      #help
      (r'^help/$', 'help'),
 
@@ -55,11 +59,20 @@ urlpatterns = patterns('sol.views',
      (r'^profile/$', 'user_profile'),
 )
 
+# RSS Feed
+urlpatterns += patterns('django.contrib.syndication.views',
+    (r'^feeds/(?P<url>.*)/$', 'feed', {'feed_dict': {
+            'latest': LatestSOLs,
+            'user': UserSOLs,            
+            'group': GroupSOLs}
+        }
+    ),
+)
+
 #these are derived from admin
 urlpatterns += patterns('',
         #login page
         (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
-
         #admin page
         (r'^admin/', include('django.contrib.admin.urls')),
 

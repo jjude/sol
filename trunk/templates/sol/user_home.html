@@ -3,6 +3,10 @@
 
 {% spaceless %}
 
+{% block feeds %}
+<link rel="alternate" type="application/rss+xml" title="User Feeds" href="/feeds/user/{{u_id}}" />
+{% endblock feeds %}
+
 
 {% block entries%}
 <h2 id="latestentries">Latest Sols of {{ nickname }}</h2>

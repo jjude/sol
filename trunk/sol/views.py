@@ -33,14 +33,17 @@ def home(request, model="s", objectId="0", page_num=1, template='home.html'):
 	#what we get as parameter is always a string
 	page_num = int(page_num)
 	if model == 'u': #for user we need to filter for the user
-		info_list = Paginator(sol.objects.all().filter(author__username=objectId), paginate_by)
+		info_list = Paginator(sol.objects.filter(author__username=objectId), paginate_by)
 	elif model== 's': #for sol; home page
-		info_list = Paginator(sol.objects.all(), paginate_by)
+                if objectId == '0':
+                        info_list = Paginator(sol.objects.all(), paginate_by)
+                else:
+                        info_list = Paginator(sol.objects.filter(id=objectId), paginate_by)
 	elif model =='g': #for group
 		if objectId == '0':
 			info_list = Paginator(group.objects.all(), paginate_by)
 		else:
-			info_list = Paginator(sol.objects.all().filter(group=group.objects.get(id=objectId)), paginate_by)
+			info_list = Paginator(sol.objects.filter(group=group.objects.get(id=objectId)), paginate_by)
 
     #if the user altered the URL for a particular page that doesn't exist
 	try:
@@ -60,7 +63,7 @@ def home(request, model="s", objectId="0", page_num=1, template='home.html'):
 		'previous_page' : page_info.previous_page_number(),
 		'has_next' : page_info.has_next(),
 		'next_page' : page_info.next_page_number(),
-		'site_name' : 'sol',
+		'site_name' : settings.SITE_NAME,
 		'user' : request.user,
 	}
 
@@ -80,6 +83,7 @@ def home(request, model="s", objectId="0", page_num=1, template='home.html'):
 			info_dict['solForm'] = solForm()
 		else:
 			info_dict['solForm'] = solForm(initial={'group': group.objects.get(id=objectId)})
+                        info_dict['grpId'] = objectId
 			info_dict['grpName'] = group.objects.get(id=objectId).desc
 
 	return render_to_response(template, info_dict)
