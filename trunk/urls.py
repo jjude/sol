@@ -77,11 +77,11 @@ urlpatterns += patterns('',
         (r'^admin/', include('django.contrib.admin.urls')),
 
 )
-#serve css files for this site
-if settings.DEBUG:
+#serve css files for this site, if in development mode
+if settings.INSTANCE==0 or settings.INSTANCE==1:
     urlpatterns += patterns('',
         #this is to serve css
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.SITE_MEDIA + '/site_media/'}),
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_URL}, ),
         #this is to serve image files
-        (r'^files/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_URL }),
+        (r'^files/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_URL + 'files/' }),
     )

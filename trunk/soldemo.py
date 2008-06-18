@@ -6,6 +6,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
 #these pertain to your application
 import sol.models
 import sol.views
+import sol.feeds
 import urls
 import manage
 import settings
@@ -48,6 +49,7 @@ import django.contrib.admin.views.doc
 import django.contrib.admin.views.template
 import django.conf.urls.shortcut
 import django.views.defaults
+import django.contrib.syndication.views
 
 #dont need to import these pkgs
 #need to know how to exclude them
