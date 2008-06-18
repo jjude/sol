@@ -12,7 +12,7 @@ class userprofile(models.Model):
 	user = models.ForeignKey(auth.User, unique=True)
 	#here goes the profile details
 	nickname = models.CharField(max_length=30)
-	profphoto = models.ImageField("Your Avatar", upload_to=settings.MEDIA_URL, blank=True,null=True)
+	profphoto = models.ImageField("Your Avatar", upload_to=settings.AVATAR_FILES, blank=True,null=True)
 	#blog_url = models.URLField(blank=True,null=True)
 
 	def __unicode__(self):
@@ -95,8 +95,8 @@ class sol(models.Model):
 		else:
 			filename = settings.DEFAULT_AVATAR
 		#you need to prepend with /; otherwise the base for the image path will be whichever path we are in
-		#like in /u/100 - it will be taken as /u/100/files/avatar.jpg
-		return '/%s%s' % (settings.MEDIA_URL, filename)
+		#like in /u/100 - it will be taken as /u/100/files/avatar.jpg		
+		return '/%s%s' % (settings.AVATAR_FILES, filename)
 
 	class Admin:
 		list_display = ('author', 'body', 'date')

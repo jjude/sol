@@ -3,12 +3,17 @@
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = sys.argv[0]
+#Instance variables
+#0-devel;1-demo;2-prod (igate); 3-hosting(bells-n-whistles)
+INSTANCE = 1
 
+##below are for development; at the end of this file we modify for other instances
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = '.'
+    
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -17,7 +22,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = os.path.join(".", 'sol.db')             # Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(PROJECT_DIR, 'sol.db')            # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -42,14 +47,12 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-
-#MEDIA_ROOT = '%s' % PROJECT_DIR
-MEDIA_ROOT = '.'
+MEDIA_ROOT = '%s' % PROJECT_DIR
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'files/'
+MEDIA_URL = 'media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -93,12 +96,11 @@ INSTALLED_APPS = (
     'sol',
 )
 
-
 ### Application Settings ###
 AUTH_PROFILE_MODULE = "sol.userprofile" #extended user profile module
-SITE_MEDIA = '.'                        # URL for SITE_MEDIA = css/js for SOL
 PAGINATE_BY = 100                       # paginate by
 AVATAR_SIZE = (50,50)                   #profile photo image width & ht
+AVATAR_FILES = MEDIA_URL + 'files/'
 DEFAULT_AVATAR = 'sol_avatar.jpg'       #default avatar iamge
 SITE_NAME = 'SOL'                       # the name for this service
 FEED_SIZE = 15
@@ -108,5 +110,12 @@ LOGOUT_URL = "/"
 ### /Application Settings  ###
 
 #got another settings that stores uid/secret random number etc.
-if not DEBUG:
+#demo
+if INSTANCE==1:
+    ADMIN_MEDIA_PREFIX = '/media/'
+#prod igate
+elif INSTANCE == 2:    
     from settings_prod import *
+#webhosting    
+elif INSTANCE == 3:
+    from settings_hosting import *

@@ -3,10 +3,6 @@ import py2exe
 import glob
 import os
 
-#get the python path from environment variable
-#it will be separated by ;
-#get the first one
-PYTHON_PATH=os.environ['PYTHONPATH'].split(';')[0]
 
 setup(
     options = {"py2exe": {"compressed": 1,
@@ -21,17 +17,18 @@ setup(
     #these are the data files like templates, site media and admin media
     data_files = [(".",["soldemo.db"]),
         ("templates\\sol",glob.glob("templates\\sol\\*.*")),
-        ("files",glob.glob("files\\sol_avatar.jpg")),
-        ("site_media",glob.glob("site_media\\*.*")),
-        ("site_media\\css",glob.glob("site_media\\css\\*.*")),
-        ("templates\\admin",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\templates\\admin\\*.*")),
-        ("templates\\admin\\auth\\user",glob.glob(PYTHON_PATH+"\\Lib\site-packages\\django\\contrib\\admin\\templates\\admin\\auth\\user\\*.*")),
-        ("templates\\admin_doc",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\templates\\admin_doc\\*.*")),
-        ("templates\\widget",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\templates\\widget\\*.*")),
-        ("templates\\registration",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\templates\\registration\\*.*")),
-        ("adminmedia\\css",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\media\\css\*.*")),
-        ("adminmedia\\js",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\media\\js\\*.*")),
-        ("adminmedia\\img",glob.glob(PYTHON_PATH+"\\Lib\\site-packages\\django\\contrib\\admin\\media\\img\\*.*")),
+        ("templates\\feeds",glob.glob("templates\\feeds\\*.*")),
+        ("media\\files",glob.glob("media\\files\\sol_avatar.jpg")),
+        ("media",glob.glob("media\\*.*")),
+        ("media\\css",glob.glob("media\\css\\*.*")),
+        ("templates\\admin",glob.glob("templates\\admin\\*.*")),
+        ("templates\\admin\\auth\\user",glob.glob("templates\\admin\\auth\\user\\*.*")),
+        ("templates\\admin_doc",glob.glob("templates\\admin_doc\\*.*")),
+        ("templates\\widget",glob.glob("templates\\widget\\*.*")),
+        ("templates\\registration",glob.glob("templates\\registration\\*.*")),
+        ("media\\css",glob.glob("templates\\admin\\media\\css\*.*")),
+        ("media\\js",glob.glob("templates\\admin\\media\\js\\*.*")),
+        ("media\\img",glob.glob("templates\\admin\\media\\img\\*.*")),
         ],
     zipfile = None,
     console=['soldemo.py'],
